@@ -1,3 +1,20 @@
+/*
+** Copyright (C) 2011 Vladimir Zahradnik <vladimir.zahradnik@gmail.com>
+**
+** This program is free software: you can redistribute it and/or modify
+** it under the terms of the GNU General Public License as published by
+** the Free Software Foundation, either version 2 or version 3 of the
+** License.
+**
+** This program is distributed in the hope that it will be useful,
+** but WITHOUT ANY WARRANTY; without even the implied warranty of
+** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+** GNU General Public License for more details.
+**
+** You should have received a copy of the GNU General Public License
+** along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 #include <stdio.h>
 #include <ctype.h>
 #include <stdlib.h>
@@ -101,14 +118,14 @@ int writeText(char *f_read)
      /* Loading required files */
     FILE *f_input, *f_en, *f_fr, *f_it, *f_de, *f_es;
         
-    printf("Prajete si dekompilovat subor s dialogmi - speech.info (A/N)?");
-    while ((option = toupper(getchar())) != 'A'  &&  option != 'N') {
+    printf("Do you want to decompile file containing dialogs - speech.info (Y/N)?");
+    while ((option = toupper(getchar())) != 'Y'  &&  option != 'N') {
     while (getchar() != '\n')
       ;
-    printf("[A / N]: ");
+    printf("[Y / N]: ");
   }
 
-     printf("Prebieha dekompilacia textu zo suboru %s...\n", f_read);
+     printf("Decompiling text from file %s...\n", f_read);
      printf("------------------------------------------------------\n");
      
      if(option == 'A'){
@@ -116,31 +133,31 @@ int writeText(char *f_read)
         
     /* Opening input and output files */
     if( (f_input = fopen(f_read, "rb")) == NULL ){
-    printf("Subor '%s' sa nepodarilo otvorit.\n", f_read);
+    printf("Unable to open file '%s'.\n", f_read);
     return 1;
     }
     if( (f_en = fopen("speech.en", "wb")) == NULL ){
-    printf("Subor 'speech.en' sa nepodarilo otvorit.\n");
+    printf("Unable to open file 'speech.en'.\n");
     return 1;
     }
     
     if( (f_fr = fopen("speech.fr", "wb")) == NULL ){
-    printf("Subor 'speech.fr' sa nepodarilo otvorit.\n");
+    printf("Unable to open file 'speech.fr'.\n");
     return 1;
     }
     
     if( (f_it = fopen("speech.it", "wb")) == NULL ){
-    printf("Subor 'speech.it' sa nepodarilo otvorit.\n");
+    printf("Unable to open file 'speech.it'.\n");
     return 1;
     }
     
     if( (f_de = fopen("speech.de", "wb")) == NULL ){
-    printf("Subor 'speech.de' sa nepodarilo otvorit.\n");
+    printf("Unable to open file 'speech.de'.\n");
     return 1;
     }
     
     if( (f_es = fopen("speech.es", "wb")) == NULL ){
-    printf("Subor 'speech.es' sa nepodarilo otvorit.\n");
+    printf("Unable to open file 'speech.es'.\n");
     return 1;
     }
     
@@ -148,7 +165,7 @@ int writeText(char *f_read)
     while(!feof(f_input)){
        if( (bytes_read = fread(&entry, sizeof(spEntry), 1, f_input)) != 0 ){
        
-         printf("Pocet zapisanych retazcov: %d\r", items_written);
+         printf("Strings written: %d\r", items_written);
                  
         WriteToFile(&entry, f_en, f_fr, f_it, f_de, f_es);
         items_written++; // number of written lines of text
@@ -159,33 +176,33 @@ int writeText(char *f_read)
       else{
            uiEntry entry;
            
-           /* Opening input and output files */
+    /* Opening input and output files */
     if( (f_input = fopen(f_read, "rb")) == NULL ){
-    printf("Subor '%s' sa nepodarilo otvorit.\n", f_read);
+    printf("Unable to open file '%s'.\n", f_read);
     return 1;
     }
     if( (f_en = fopen("uiText.en", "wb")) == NULL ){
-    printf("Subor 'uiText.en' sa nepodarilo otvorit.\n");
+    printf("Unable to open file 'uiText.en'.\n");
     return 1;
     }
     
     if( (f_fr = fopen("uiText.fr", "wb")) == NULL ){
-    printf("Subor 'uiText.fr' sa nepodarilo otvorit.\n");
+    printf("Unable to open file 'uiText.fr'.\n");
     return 1;
     }
     
     if( (f_it = fopen("uiText.it", "wb")) == NULL ){
-    printf("Subor 'uiText.it' sa nepodarilo otvorit.\n");
+    printf("Unable to open file 'uiText.it'.\n");
     return 1;
     }
     
     if( (f_de = fopen("uiText.de", "wb")) == NULL ){
-    printf("Subor 'uiText.de' sa nepodarilo otvorit.\n");
+    printf("Unable to open file 'uiText.de'.\n");
     return 1;
     }
     
     if( (f_es = fopen("uiText.es", "wb")) == NULL ){
-    printf("Subor 'uiText.es' sa nepodarilo otvorit.\n");
+    printf("Unable to open file 'uiText.es'.\n");
     return 1;
     }
            
@@ -193,7 +210,7 @@ int writeText(char *f_read)
                    
            if( (bytes_read = fread(&entry, sizeof(uiEntry), 1, f_input)) != 0 ){
        
-       printf("Pocet zapisanych retazcov: %d\r", items_written);
+       printf("Strings written: %d\r", items_written);
        fprintf(f_en, "%s\n", entry.en);
        fprintf(f_fr, "%s\n", entry.fr);
        fprintf(f_it, "%s\n", entry.it);
@@ -207,12 +224,12 @@ int writeText(char *f_read)
     
     /* Closing files */
     if ((fclose(f_input)) == EOF){
-    printf("Subor '%s' sa nepodarilo uzavriet.\n", f_read);
+    printf("Unable to close file '%s'.\n", f_read);
     return 1;
     }
 
     if ((fclose(f_en) && fclose(f_fr) && fclose(f_it) && fclose(f_de) && fclose(f_es)) == EOF){
-    printf("Subory sa nepodarilo uzavriet.\n");
+    printf("Unable to close files.\n");
     return 1;
     }    
 
